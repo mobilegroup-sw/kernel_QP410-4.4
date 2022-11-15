@@ -1,0 +1,30 @@
+ELAN epl2182 ambient light + proximity combo driver
+
+Required properties:
+
+ - compatible					: Should be "elan,epl2182".
+ - reg							: i2c slave address of the device.
+ - interrupt-parent				: Parent of interrupt.
+ - interupts					: L/P sample interrupt to indicate new data ready.
+ - vdd-supply					: Power supply needed to power up the device.
+ - vio-supply					: IO power supply needed for IO and I2C.
+ - epl2182,irq-gpio				: The gpio pin for the interrupt.
+ - epl2182,prox_th_min			: The threshold adc value for proximity sensor to trigger away interrupt.
+ - epl2182,prox_th_max			: The threshold adc value for proximity sensor to trigger  close interrupt.
+
+ Example:
+
+	elan@49 { /* Ambient light and proximity sensor */
+		compatible = "elan,epl2182";
+		reg = <0x49>;
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&epl2182_default>;
+		pinctrl-1 = <&epl2182_sleep>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <113 0x2002>;
+		vdd-supply = <&pm8916_l17>;
+		vio-supply = <&pm8916_l6>;
+		epl2182,irq-gpio = <&msm_gpio 113 0x2002>;
+		epl2182,prox_th_min = <500>;
+		epl2182,prox_th_max = <1000>;
+	};

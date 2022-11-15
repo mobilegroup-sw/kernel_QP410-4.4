@@ -1,0 +1,41 @@
+Kionis KXTIK-series accelerometer driver
+
+Required properties:
+
+ - compatible				: Should be "kionix,kxcjk-1013".
+ - reg					: i2c slave address of the device.
+ - interrupt-parent			: Parent of interrupt.
+ - interrupts				: Accelerometer sample interrupt to indicate new data ready.
+ - vdd-supply				: Analog power supply needed to power device.
+ - vio-supply				: Digital IO power supply needed for IO and I2C.
+ - kionix,min-interval		: Minimal data polling interval in millisecond.
+ - kionix,poll-interval		: Initial data polling interval in millisecond.
+ - kionix,accel_irq_use_drdy	: whether or not to use DRDY hardware interrupt mode to
+						trigger a data report event instead of using software polling.
+ - kionix,accel_res			: Boolean to select output data resolution, if this
+						property is defined, sensor will be configured
+						to output 12 bits of data, otherwise sensor will
+						be configured to output 8 bits data.
+ - kionix,accel_g_range		: Select initial range of measurement. This define
+						the initial configuration of maxinum
+						measurement range of the sensor.Where 2 is 2G,
+						4 is 4G, 8 is 8G, 2G will be used for any other
+						values.
+
+Example:
+&i2c_0 { /* BLSP1 QUP2 */
+	kionix@f {
+		compatible = "kionix,kxcjk-1013";
+		reg = <0x0f>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <112 0x2002>;
+		vdd-supply = <&pm8916_l17>;
+		vio-supply = <&pm8916_l6>;
+		kionix,min_interval = <5>;
+		kionix,poll_interval = <100>;
+		kionix,accel_direction = <1>;
+		kionix,accel_irq_use_drdy = <0>;
+		kionix,accel_res = <12>;
+		kionix,accel_g_range = <2>;
+	};
+};

@@ -1,0 +1,198 @@
+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "msm8916-qrd-skui.dtsi"
+#include "dsi-panel-hx8379a-fwvga-video.dtsi"
+
+/ {
+       model = "Qualcomm Technologies, Inc. MSM 8916 QRD SKUID";
+       compatible = "qcom,msm8916-qrd-skuid", "qcom,msm8916-qrd", "qcom,msm8916", "qcom,qrd";
+};
+
+&mdss_dsi0 {
+	qcom,dsi-pref-prim-pan = <&dsi_hx8379a_fwvga_video>;
+	pinctrl-names = "mdss_default", "mdss_sleep";
+	pinctrl-0 = <&mdss_dsi_active>;
+	pinctrl-1 = <&mdss_dsi_suspend>;
+
+	qcom,platform-reset-gpio = <&msm_gpio 25 0>;
+};
+
+&dsi_hx8379a_fwvga_video {
+	qcom,cont-splash-enabled;
+};
+
+&soc {
+	i2c@78b9000 { /* BLSP1 QUP5 */
+		mstar@26 {
+			compatible = "mstar,msg21xx";
+			reg = <0x26>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <13 0x2008>;
+			mstar,irq-gpio = <&msm_gpio 13 0x00000001>;
+			mstar,reset-gpio = <&msm_gpio 12 0x0>;
+			vdd-supply = <&pm8916_l17>;
+			vcc_i2c-supply = <&pm8916_l6>;
+			mstar,display-coords = <0 0 480 854>;
+			pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release";
+			pinctrl-0 = <&ts_int_active &ts_reset_active>;
+			pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+			pinctrl-2 = <&ts_release>;
+			mstar,button-map = <172 139 158>;
+			mstar,ic-type = <2>;
+			mstar,num-max-touches = <2>;
+			mstar,hard-reset-delay-ms = <100>;
+			mstar,post-hard-reset-delay-ms = <100>;
+		};
+	};
+
+	i2c@78b9000 { /* BLSP1 QUP5 */
+		focaltech@38 {
+			compatible = "focaltech,5x06";
+			reg = <0x38>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <13 0x2008>;
+			vdd-supply = <&pm8916_l17>;
+			vcc_i2c-supply = <&pm8916_l6>;
+			/* pins used by touchscreen */
+			pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release";
+			pinctrl-0 = <&ts_int_active &ts_reset_active>;
+			pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+			pinctrl-2 = <&ts_release>;
+			focaltech,name = "ft5336";
+			focaltech,family-id = <0x14>;
+			focaltech,reset-gpio = <&msm_gpio 12 0x0>;
+			focaltech,irq-gpio = <&msm_gpio 13 0x2008>;
+			focaltech,display-coords = <0 0 1200 1920>;	
+			focaltech,panel-coords = <0 0 1200 1920>;
+			focaltech,no-force-update;
+			focaltech,i2c-pull-up;
+			focaltech,group-id = <1>;
+			focaltech,hard-reset-delay-ms = <20>;
+			focaltech,soft-reset-delay-ms = <200>;
+			focaltech,num-max-touches = <5>;
+			focaltech,fw-delay-aa-ms = <30>;
+			focaltech,fw-delay-55-ms = <30>;
+			focaltech,fw-upgrade-id1 = <0x11>;
+			focaltech,fw-upgrade-id2 = <0x11>;
+			focaltech,fw-delay-readid-ms = <10>;
+			focaltech,fw-delay-era-flsh-ms = <2000>;
+			focaltech,fw-auto-cal;
+			focaltech,ignore-id-check;
+		};
+	};
+	gen-vkeys {
+		compatible = "qcom,gen-vkeys";
+		label = "ft5x06_ts";
+/*		qcom,disp-maxx = <1080>;			*/
+/*		qcom,disp-maxy = <1920>;			*/
+/*		qcom,panel-maxx = <1080>;			*/
+/*		qcom,panel-maxy = <2098>;			*/
+		qcom,disp-maxx = <1200>;
+		qcom,disp-maxy = <1920>;
+		qcom,panel-maxx = <1200>;
+		qcom,panel-maxy = <1920>;			// need modify, lee 1225
+//		qcom,key-codes = <139 172 158>;
+		qcom,y-offset = <0>;
+	};
+
+};
+
+
+&soc {
+	i2c@78b8000 { /* BLSP1 QUP4 */
+		smb1357_otg_vreg: smb1357-charger@57 {
+			compatible = "qcom,smb1357-charger";
+			reg = <0x57>;//base you smb1357 part number, 0x1c or 0x57
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <62 8>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&smb_int_default>;
+
+			qcom,bmd-algo-disabled;
+			qcom,float-voltage-mv = <4200>;//base so your battery specification 4200 or 4350
+			qcom,charging-timeout = <1536>;
+			qcom,recharge-thresh-mv = <100>;
+			regulator-name = "smb1357_otg_vreg";
+			qcom,soft-vfloat-comp-disabled;
+			qcom,thermal-mitigation = <1500 700 600 0>;
+
+			qcom,bms-psy-name = "bms";
+			qcom,iterm-disabled;
+			qcom,inhibit-disabled;
+			qcom,bms-controlled-charging;
+		};
+	};
+};
+&pm8916_chg {
+	status = "ok";
+	qcom,use-external-charger;
+}; 
+
+&pm8916_bms {
+	status = "ok";
+	//qcom,disable-bms;
+//	qcom,battery-data = <&mtp_batterydata>;
+//	qcom,resume-soc = <95>;
+//	qcom,charger-detect-cv;
+}; 
+/*
+&pm8916_chg {
+	qcom,vddmax-mv = <4350>;
+	qcom,vddsafe-mv = <4380>;
+	qcom,vinmin-mv = <4470>;
+	qcom,batt-hot-percentage = <35>;
+	qcom,batt-cold-percentage = <70>;
+	qcom,tchg-mins = <360>;
+	qcom,disable-vbatdet-based-recharge;
+	status = "okay";
+};
+
+/ {
+	qrd_batterydata: qcom,battery-data {
+	qcom,rpull-up-kohm = <100>;
+	qcom,vref-batt-therm = <1800000>;
+
+	//#include "batterydata-qrd-skuic-4v35-1850mah.dtsi"
+	#include "batterydata-qrd-chooser.dtsi"
+	};
+};
+
+&pm8916_bms {
+	status = "okay";
+	qcom,force-bms-active-on-charger;
+	qcom,battery-data = <&qrd_batterydata>;
+};
+*/
+&i2c_0 { /* BLSP1 QUP2 */
+	bosch@18 { /* Accelerometer sensor */
+		compatible = "bosch,bma2x2";
+		reg = <0x18>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&bma2x2_int1_default &bma2x2_int2_default>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <112 0x2002>;
+		vdd-supply = <&pm8916_l17>;
+		vio-supply = <&pm8916_l6>;
+		bosch,init-interval = <200>;
+		bosch,place = <0>;
+		bosch,gpio-int1 = <&msm_gpio 112 0x2002>;
+		bosch,gpio-int2 = <&msm_gpio 114 0x2002>;
+	};
+};
+&usb_otg {
+	qcom,hsusb-otg-mode = <3>;
+	qcom,usbid-gpio = <&msm_gpio 110 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usbid_default>;
+	vbus_otg-supply = <&smb1357_otg_vreg>;
+};

@@ -1,0 +1,29 @@
+/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+ /*
+#include "dsi-panel-otm8019a-fwvga-video.dtsi"
+#include "dsi-panel-truly-tft480854-11-otm8018b-fwvga-video.dtsi"
+#include "dsi-panel-r69429-1200-1900-video.dtsi"
+
+#include "dsi-panel-truly-tft7201280-11-e-otm1283a-720p-video.dtsi"
+#include "dsi-panel-auo-800-1280-video.dtsi"
+#include "dsi-panel-s6d7aa0x01-800-1280-video.dtsi"
+#include "dsi-panel-s6d7aa0-sdc-800-1280-video.dtsi"
+#include "dsi-panel-truly-ips3p3097-e-r63315-1080p-video.dtsi"
+#include "dsi-panel-r69429-zuzhuang-1200-1920-video.dtsi"
+*/
+//#include "dsi-panel-auo-1200-1920-video.dtsi"
+#include "dsi-panel-vdt-800p-video.dtsi"
+//#include "dsi-panel-icn620x-video.dtsi"
+//#include "dsi-panel-s6d7aa0x01-800-1280-video.dtsi"
+//#include "dsi-panel-icn620x-hsd080-1024-600-video.dtsi"
+//#include "dsi-panel-r69429-zuzhuang-1200-1920-video.dtsi"
